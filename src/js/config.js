@@ -16,7 +16,13 @@
   const config = kintone.plugin.app.getConfig(PLUGIN_ID);
   if (config) {
     apikeyEl.value = config.apikey || '';
-    modelEl.value = config.model || '';
+    // modelの設定をドロップダウンリストに適応
+    if (config.model) {
+      let modelOption = modelEl.querySelector(`option[value="${config.model}"]`);
+      if (modelOption) {
+        modelOption.selected = true;
+      }
+    }
     roleEl.value = config.role || '';
     contentFieldEl.value = config.contentField || '';
     replyFieldEl.value = config.replyField || '';

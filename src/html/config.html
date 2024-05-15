@@ -5,38 +5,42 @@
     <!-- 既存のフィールド -->
     <p class="kintoneplugin-row">
       <label for="apikey">
-        APIKey:
+        APIKey:OpenAIのAPIキーを入力してください。
         <input type="text" id="apikey" class="js-apikey kintoneplugin-input-text">
       </label>
     </p>
     <p class="kintoneplugin-row">
       <label for="model">
-        Model:
-        <input type="text" id="model" class="js-model kintoneplugin-input-text">
+        Model:GPTモデルを選択して下さい。
+        <select id="model" class="js-model kintoneplugin-input-text">
+          <option value="gpt-4o">gpt-4o</option>
+          <option value="gpt-4-turbo">gpt-4-turbo</option>
+          <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+        </select>
       </label>
     </p>
     <p class="kintoneplugin-row">
       <label for="role">
-        Role:
+        Role:AIの役割や実行したいタスクについて入力してください。
         <input type="text" id="role" class="js-role kintoneplugin-input-text">
       </label>
     </p>
     <p class="kintoneplugin-row">
       <label for="contentField">
-        Content Field:
+        Content Field:AIに処理させるフィールドコードを設定して下さい。
         <input type="text" id="contentField" class="js-content-field kintoneplugin-input-text">
       </label>
     </p>
     <p class="kintoneplugin-row">
       <label for="replyField">
-        Reply Field:
+        Reply Field:AIからの結果を反映するフィールドコードを設定して下さい。
         <input type="text" id="replyField" class="js-reply-field kintoneplugin-input-text">
       </label>
     </p>
     <!-- 新しいフィールド：スペースID -->
     <p class="kintoneplugin-row">
       <label for="spaceId">
-        Space ID:
+        Space ID:ボタンを配置するためのスペースのフィールドコードを設定して下さい。
         <input type="text" id="spaceId" class="js-space-id kintoneplugin-input-text">
       </label>
     </p>
