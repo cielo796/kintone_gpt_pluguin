@@ -40,7 +40,7 @@
   },
   "description": {
     "en": "Plugin to use ChatGPT API in Kintone",
-    "ja": "ChatGPT_APIをkintioneで使うためのプラグイン"
+    "ja": "ChatGPTAPIをkintioneで使うためのプラグイン"
   },
   "mobile": {
     "js": [
