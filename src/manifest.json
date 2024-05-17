@@ -8,6 +8,7 @@
       "js/desktop.js"
     ],
     "css": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
       "css/51-modern-default.css",
       "css/desktop.css"
     ]
@@ -20,6 +21,7 @@
       "js/config.js"
     ],
     "css": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
       "css/51-modern-default.css",
       "css/config.css"
     ],
@@ -46,6 +48,7 @@
       "js/mobile.js"
     ],
     "css": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
       "css/mobile.css"
     ]
   }
