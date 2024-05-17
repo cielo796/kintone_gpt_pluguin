@@ -8,6 +8,7 @@
       "js/desktop.js"
     ],
     "css": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
       "css/51-modern-default.css",
       "css/desktop.css"
     ]
@@ -20,6 +21,7 @@
       "js/config.js"
     ],
     "css": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
       "css/51-modern-default.css",
       "css/config.css"
     ],
@@ -38,7 +40,7 @@
   },
   "description": {
     "en": "Plugin to use ChatGPT API in Kintone",
-    "ja": "ChatGPT_APIをkintioneで使うためのプラグイン"
+    "ja": "ChatGPTAPIをkintioneで使うためのプラグイン"
   },
   "mobile": {
     "js": [
@@ -46,6 +48,7 @@
       "js/mobile.js"
     ],
     "css": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
       "css/mobile.css"
     ]
   }
