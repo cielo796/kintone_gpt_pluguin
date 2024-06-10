@@ -41,7 +41,9 @@
               messages: [
                   {"role": "system", "content": config.role},
                   {"role": "user", "content": content}
-              ]
+              ],
+              temperature: parseFloat(config.temperature), // 応答の創造性を制御
+              max_tokens: parseInt(config.maxTokens, 10) // 生成するトークンの最大数
           };
 
           notification.open();

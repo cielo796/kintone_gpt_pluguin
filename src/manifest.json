@@ -28,6 +28,8 @@
     "required_params": [
       "apikey",
       "model",
+      "temperature",
+      "maxTokens",
       "role",
       "contentField",
       "replyField",
