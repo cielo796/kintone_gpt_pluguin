@@ -1,0 +1,13 @@
+.settings-heading {
+  padding: 1em 0;
+}
+
+.kintoneplugin-input-text {
+  width: 20em;
+}
+
+/* テキストエリアのスタイルを調整する場合 */
+.js-role {
+  width: 20em; /* 必要に応じて調整 */
+  /* 他のスタイルも必要に応じて追加 */
+}

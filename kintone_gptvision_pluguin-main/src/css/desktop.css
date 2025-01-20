@@ -1,0 +1,19 @@
+.plugin-space-heading {
+  font-size: 1.5rem;
+  margin: 0.8rem;
+}
+.plugin-space-message {
+  display: inline-block;
+  font-size: 1.2em;
+  margin: 0.8rem;
+  margin-top: 0;
+}
+
+/* kuc-buttonのスタイルを設定 */
+.kuc-button-1-17-0__button {
+  font-family: sans-serif;
+  margin-left: 8px;
+}
+
+
+

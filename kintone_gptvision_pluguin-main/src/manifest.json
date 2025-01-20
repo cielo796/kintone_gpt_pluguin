@@ -1,0 +1,55 @@
+{
+  "manifest_version": 1,
+  "version": 1,
+  "type": "APP",
+  "desktop": {
+    "js": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.js",
+      "js/desktop.js"
+    ],
+    "css": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
+      "css/51-modern-default.css",
+      "css/desktop.css"
+    ]
+  },
+  "icon": "image/icon.png",
+  "config": {
+    "html": "html/config.html",
+    "js": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.js",
+      "js/config.js"
+    ],
+    "css": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
+      "css/51-modern-default.css",
+      "css/config.css"
+    ],
+    "required_params": [
+      "apikey",
+      "model",
+      "role",
+      "contentField",
+      "replyField",
+      "spaceId"
+    ]
+  },
+  "name": {
+    "en": "chatgpt-plugin",
+    "ja": "chatgpt-plugin"
+  },
+  "description": {
+    "en": "Plugin to use ChatGPT API in Kintone",
+    "ja": "ChatGPTAPIをkintioneで使うためのプラグイン"
+  },
+  "mobile": {
+    "js": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.js",
+      "js/mobile.js"
+    ],
+    "css": [
+      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
+      "css/mobile.css"
+    ]
+  }
+}
