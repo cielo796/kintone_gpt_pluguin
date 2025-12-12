@@ -26,6 +26,23 @@
   };
   const safeReasoning = normalizeReasoningEffort(safeModel, config.reasoningEffort);
   const safeSystem = config.role || 'You are a helpful assistant.';
+  const extractAssistantText = (resp) => {
+    if (typeof resp.output_text === 'string' && resp.output_text.trim()) {
+      return resp.output_text.trim();
+    }
+
+    const out = Array.isArray(resp.output) ? resp.output : [];
+    const msg =
+      [...out].reverse().find((x) => x?.type === 'message' && x?.role === 'assistant') ||
+      out.find((x) => x?.type === 'message');
+
+    const parts = Array.isArray(msg?.content) ? msg.content : [];
+    return parts
+      .filter((p) => p && (p.type === 'output_text' || p.type === 'text'))
+      .map((p) => p.text)
+      .join('\n')
+      .trim();
+  };
 
   kintone.events.on(['mobile.app.record.create.show', 'mobile.app.record.edit.show'], function(event) {
     const spaceElement = kintone.mobile.app.record.getSpaceElement(config.spaceId);
@@ -79,13 +96,7 @@
         JSON.stringify(requestData),
         (body, status, responseHeaders) => {
           const apiResponse = JSON.parse(body);
-          const messageBlock = (apiResponse.output || []).find((item) => item.type === 'message') || (apiResponse.output || [])[0];
-          const contentBlocks = messageBlock?.content || [];
-          const assistantText = contentBlocks
-            .filter((part) => part.type === 'text')
-            .map((part) => part.text)
-            .join('\n')
-            .trim();
+          const assistantText = extractAssistantText(apiResponse);
 
           if (status === 200 && assistantText) {
             record.record[config.replyField].value = assistantText;
