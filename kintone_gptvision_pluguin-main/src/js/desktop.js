@@ -1,8 +1,8 @@
 (function(PLUGIN_ID) {
-  const config = kintone.plugin.app.getConfig(PLUGIN_ID);
+  const config = kintone.plugin.app.getConfig(PLUGIN_ID) || {};
   const pluginId = PLUGIN_ID;
 
-  // Responses API（最新モデル想定）に対応
+  // Responses API向け（最新モデル想定）に対応
   const url = 'https://api.openai.com/v1/responses';
   const method = 'POST';
   const headers = {
@@ -10,8 +10,23 @@
   };
 
   // default to latest public model (from OpenAI documented spec)
-  const safeModel = config.model || 'gpt-5.2';
-  const safeReasoning = config.reasoningEffort || 'medium';
+  const defaultModel = 'gpt-5.2';
+  const defaultReasoning = 'none';
+  const baseReasoningOptions = ['none', 'low', 'medium', 'high', 'xhigh'];
+  const reasoningLimitsByModel = {
+    'gpt-5.2-pro': ['medium', 'high', 'xhigh'],
+    'gpt-5.1': ['none', 'low', 'medium', 'high'],
+    'gpt-5.1-chat-latest': ['none', 'low', 'medium', 'high']
+  };
+  const safeModel = config.model || defaultModel;
+  const normalizeReasoningEffort = (model, effort) => {
+    const normalized = effort === 'minimal' ? 'none' : (effort || defaultReasoning);
+    const allowed = reasoningLimitsByModel[model] || baseReasoningOptions;
+    if (allowed.includes(normalized)) return normalized;
+    if (allowed.includes(defaultReasoning)) return defaultReasoning;
+    return allowed[0];
+  };
+  const safeReasoning = normalizeReasoningEffort(safeModel, config.reasoningEffort);
   const safeSystem = config.role || 'You are a helpful assistant.';
 
   kintone.events.on(['app.record.create.show', 'app.record.edit.show'], function(event) {
@@ -29,7 +44,7 @@
     spaceElement.appendChild(button);
 
     const notification = new Kuc.Notification({
-      text: 'リクエスト中です。少々お待ちください。',
+      text: 'リクエスト中です。しばらくお待ちください。',
       duration: -1, // 自動的には閉じない
       className: 'notification-class'
     });
@@ -38,7 +53,7 @@
       const record = kintone.app.record.get();
       const content = record.record[config.contentField]?.value || '';
 
-      // 入力が空の場合は通知だけ出す
+      // 入力が空の場合は通知だけを出す
       if (!content.trim()) {
         notification.text = '入力フィールドが空です。内容を入力してください。';
         notification.open();
@@ -52,11 +67,11 @@
           { role: 'system', content: safeSystem },
           { role: 'user', content: content }
         ],
-        reasoning_effort: safeReasoning,
+        reasoning: { effort: safeReasoning },
         stream: false
       };
 
-      notification.text = 'リクエスト中です。少々お待ちください。';
+      notification.text = 'リクエスト中です。しばらくお待ちください。';
       notification.open();
 
       await kintone.plugin.app.proxy(
@@ -67,7 +82,7 @@
         JSON.stringify(requestData),
         (body, status, responseHeaders) => {
           const apiResponse = JSON.parse(body);
-          // Responses API 形式からアシスタントのテキストを取得
+          // Responses API 形式からアシスタントメッセージテキストを取得
           const messageBlock = (apiResponse.output || []).find((item) => item.type === 'message') || (apiResponse.output || [])[0];
           const contentBlocks = messageBlock?.content || [];
           const assistantText = contentBlocks

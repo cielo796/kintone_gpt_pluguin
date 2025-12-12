@@ -30,7 +30,9 @@
           <select id="model" class="js-model kintoneplugin-input-text">
             <option value="gpt-5.2">gpt-5.2（推奨）</option>
             <option value="gpt-5.2-pro">gpt-5.2-pro</option>
+            <option value="gpt-5.1">gpt-5.1</option>
             <option value="gpt-5.2-chat-latest">gpt-5.2-chat-latest</option>
+            <option value="gpt-5.1-chat-latest">gpt-5.1-chat-latest</option>
           </select>
           <div class="hint">Responses API対応モデルを選択してください（OpenAI OpenAPI spec v2.3.0より）。</div>
         </div>
@@ -38,14 +40,13 @@
         <label class="settings-label" for="reasoningEffort">Thinking/Reasoning</label>
         <div class="settings-control">
           <select id="reasoningEffort" class="js-reasoning kintoneplugin-input-text">
-            <option value="medium">medium（デフォルト）</option>
-            <option value="high">high</option>
+            <option value="none">none（デフォルト）</option>
             <option value="low">low</option>
-            <option value="minimal">minimal</option>
-            <option value="none">none</option>
+            <option value="medium">medium</option>
+            <option value="high">high</option>
             <option value="xhigh">xhigh</option>
           </select>
-          <div class="hint">`reasoning_effort`。gpt-5.1系で利用可能なThinking強度を指定します。</div>
+          <div class="hint">Responses APIでは reasoning.effort を指定します。gpt-5.2 / gpt-5.1 のデフォルトは none。gpt-5.2-pro は medium・high・xhigh のみ対応、gpt-5.1 系は xhigh 非対応です。</div>
         </div>
 
         <label class="settings-label" for="role">システムプロンプト</label>

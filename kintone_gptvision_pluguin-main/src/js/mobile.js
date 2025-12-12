@@ -1,23 +1,34 @@
 (function(PLUGIN_ID) {
-  const config = kintone.plugin.app.getConfig(PLUGIN_ID);
+  const config = kintone.plugin.app.getConfig(PLUGIN_ID) || {};
   const pluginId = PLUGIN_ID;
+
   const url = 'https://api.openai.com/v1/responses';
   const method = 'POST';
   const headers = {
     'Content-Type': 'application/json'
   };
-  // default to latest public model (from OpenAI documented spec)
-  const safeModel = config.model || 'gpt-5.2';
-  const safeReasoning = config.reasoningEffort || 'medium';
+
+  const defaultModel = 'gpt-5.2';
+  const defaultReasoning = 'none';
+  const baseReasoningOptions = ['none', 'low', 'medium', 'high', 'xhigh'];
+  const reasoningLimitsByModel = {
+    'gpt-5.2-pro': ['medium', 'high', 'xhigh'],
+    'gpt-5.1': ['none', 'low', 'medium', 'high'],
+    'gpt-5.1-chat-latest': ['none', 'low', 'medium', 'high']
+  };
+  const safeModel = config.model || defaultModel;
+  const normalizeReasoningEffort = (model, effort) => {
+    const normalized = effort === 'minimal' ? 'none' : (effort || defaultReasoning);
+    const allowed = reasoningLimitsByModel[model] || baseReasoningOptions;
+    if (allowed.includes(normalized)) return normalized;
+    if (allowed.includes(defaultReasoning)) return defaultReasoning;
+    return allowed[0];
+  };
+  const safeReasoning = normalizeReasoningEffort(safeModel, config.reasoningEffort);
   const safeSystem = config.role || 'You are a helpful assistant.';
 
   kintone.events.on(['mobile.app.record.create.show', 'mobile.app.record.edit.show'], function(event) {
     const spaceElement = kintone.mobile.app.record.getSpaceElement(config.spaceId);
-
-    // 親要素を作成してFlexboxに設定
-    const buttonContainer = document.createElement('div');
-    buttonContainer.className = 'kuc-button-container';
-    spaceElement.appendChild(buttonContainer);
 
     const button = new Kuc.MobileButton({
       text: 'AIに問い合わせ',
@@ -30,9 +41,8 @@
 
     spaceElement.appendChild(button);
 
-    // MobileNotificationの作成
     const notification = new Kuc.MobileNotification({
-      text: 'リクエスト中です。少々お待ちください。',
+      text: 'リクエスト中です。しばらくお待ちください。',
       duration: -1, // 自動的には閉じない
       className: 'notification-class'
     });
@@ -54,10 +64,11 @@
           { role: 'system', content: safeSystem },
           { role: 'user', content: content }
         ],
-        reasoning_effort: safeReasoning,
+        reasoning: { effort: safeReasoning },
         stream: false
       };
 
+      notification.text = 'リクエスト中です。しばらくお待ちください。';
       notification.open();
 
       await kintone.plugin.app.proxy(
