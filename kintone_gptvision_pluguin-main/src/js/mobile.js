@@ -46,6 +46,9 @@
 
   kintone.events.on(['mobile.app.record.create.show', 'mobile.app.record.edit.show'], function(event) {
     const spaceElement = kintone.mobile.app.record.getSpaceElement(config.spaceId);
+    if (spaceElement) {
+      spaceElement.classList.add('ai-button-space', 'ai-button-space--mobile');
+    }
 
     const button = new Kuc.MobileButton({
       text: 'AIに問い合わせ',

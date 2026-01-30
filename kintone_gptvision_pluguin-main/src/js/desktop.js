@@ -48,6 +48,19 @@
 
   kintone.events.on(['app.record.create.show', 'app.record.edit.show'], function(event) {
     const spaceElement = kintone.app.record.getSpaceElement(config.spaceId);
+    if (spaceElement) {
+      spaceElement.classList.add('ai-button-space', 'ai-button-space--desktop');
+      const fieldElement = config.contentField ? kintone.app.record.getFieldElement(config.contentField) : null;
+      if (fieldElement) {
+        const inputElement = fieldElement.querySelector('textarea, input, select') || fieldElement;
+        const spaceRect = spaceElement.getBoundingClientRect();
+        const inputRect = inputElement.getBoundingClientRect();
+        const offset = Math.round(inputRect.left - spaceRect.left);
+        if (Number.isFinite(offset) && offset > 0) {
+          spaceElement.style.setProperty('--ai-button-offset', `${offset}px`);
+        }
+      }
+    }
 
     const button = new Kuc.Button({
       text: 'AIに問い合わせ',

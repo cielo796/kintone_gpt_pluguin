@@ -15,5 +15,18 @@
   margin-left: 8px;
 }
 
+.ai-button-space {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.ai-button-space--desktop {
+  padding-left: var(--ai-button-offset, 0px);
+}
+
+.ai-button-space .kuc-button-1-17-0__button,
+.ai-button-space.kuc-button-1-17-0__button {
+  margin-left: 0;
+}
 
 

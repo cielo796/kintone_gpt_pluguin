@@ -14,3 +14,13 @@
   margin-left: 12px;
 }
 
+.ai-button-space {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.ai-button-space .kuc-mobile-button-1-17-0__button,
+.ai-button-space.kuc-mobile-button-1-17-0__button {
+  margin-left: 0;
+}

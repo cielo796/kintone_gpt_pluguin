@@ -35,12 +35,12 @@
     ]
   },
   "name": {
-    "en": "chatgpt-plugin",
-    "ja": "chatgpt-plugin"
+    "en": "kintone AI Text Generation Plugin (OpenAI-compatible)",
+    "ja": "kintone AI文章生成プラグイン（OpenAI対応版）"
   },
   "description": {
-    "en": "Plugin to use ChatGPT API in Kintone",
-    "ja": "ChatGPTAPIをkintioneで使うためのプラグイン"
+    "en": "Plugin that generates responses from record content with the OpenAI Responses API and writes them to specified Kintone fields.",
+    "ja": "レコード内容をOpenAI Responses APIで文章生成し、結果をKintoneの指定フィールドに書き込むプラグイン。"
   },
   "mobile": {
     "js": [
