@@ -1,0 +1,88 @@
+<section class="settings">
+  <header class="settings-hero">
+    <h2 class="settings-heading">テキスト生成設定</h2>
+    <p class="kintoneplugin-desc">Responses API対応。入力フィールドの内容をもとにOpenAIモデルで文章を生成し、出力フィールドへ保存します。</p>
+    <div class="model-summary">
+      <div class="badge badge-recommend">推奨</div>
+      <div>
+        <div class="model-name">gpt-5.2</div>
+        <div class="model-note">最新・標準。高品質なテキスト生成に最適。</div>
+      </div>
+    </div>
+    <div class="model-summary muted">
+      <div class="model-name">gpt-5.2-pro</div>
+      <div class="model-note">より高性能な推論が必要なケース向け。</div>
+    </div>
+  </header>
+
+  <form class="js-submit-settings">
+    <div class="settings-card">
+      <h3 class="section-title">OpenAI設定</h3>
+      <div class="settings-grid">
+        <label class="settings-label" for="apikey">APIキー <span class="required">必須</span></label>
+        <div class="settings-control">
+          <input type="text" id="apikey" class="js-apikey kintoneplugin-input-text" placeholder="sk-...">
+          <div class="hint">組織のセキュリティポリシーに沿って管理してください。</div>
+        </div>
+
+        <label class="settings-label" for="model">モデル</label>
+        <div class="settings-control">
+          <select id="model" class="js-model kintoneplugin-input-text">
+            <option value="gpt-5.2">gpt-5.2（推奨）</option>
+            <option value="gpt-5.2-pro">gpt-5.2-pro</option>
+            <option value="gpt-5.1">gpt-5.1</option>
+            <option value="gpt-5.2-chat-latest">gpt-5.2-chat-latest</option>
+            <option value="gpt-5.1-chat-latest">gpt-5.1-chat-latest</option>
+          </select>
+          <div class="hint">Responses API対応モデルを選択してください。</div>
+        </div>
+
+        <label class="settings-label" for="reasoningEffort">Thinking/Reasoning</label>
+        <div class="settings-control">
+          <select id="reasoningEffort" class="js-reasoning kintoneplugin-input-text">
+            <option value="none">none（デフォルト）</option>
+            <option value="low">low</option>
+            <option value="medium">medium</option>
+            <option value="high">high</option>
+            <option value="xhigh">xhigh</option>
+          </select>
+          <div class="hint">Responses APIでは reasoning.effort を指定します。gpt-5.2 / gpt-5.1 のデフォルトは none。gpt-5.2-pro は medium・high・xhigh のみ対応、gpt-5.1 系は xhigh 非対応です。</div>
+        </div>
+
+        <label class="settings-label" for="role">システムプロンプト</label>
+        <div class="settings-control">
+          <textarea id="role" class="js-role kintoneplugin-input-text" rows="4" placeholder="例：あなたはカスタマーサポート担当です。ユーザーの質問に簡潔に答えてください。"></textarea>
+          <div class="hint">AIの役割やトーンを指定します。未入力時は汎用アシスタントとして動作します。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <h3 class="section-title">kintoneフィールド設定</h3>
+      <div class="settings-grid">
+        <label class="settings-label" for="contentField">入力フィールドコード <span class="required">必須</span></label>
+        <div class="settings-control">
+          <input type="text" id="contentField" class="js-content-field kintoneplugin-input-text" placeholder="例：Inquiry">
+          <div class="hint">AIに渡す本文のフィールドコード。</div>
+        </div>
+
+        <label class="settings-label" for="replyField">出力フィールドコード <span class="required">必須</span></label>
+        <div class="settings-control">
+          <input type="text" id="replyField" class="js-reply-field kintoneplugin-input-text" placeholder="例：Answer">
+          <div class="hint">AIの回答を保存するフィールドコード。</div>
+        </div>
+
+        <label class="settings-label" for="spaceId">スペースID <span class="required">必須</span></label>
+        <div class="settings-control">
+          <input type="text" id="spaceId" class="js-space-id kintoneplugin-input-text" placeholder="例：ai-button">
+          <div class="hint">ボタンを配置するスペースフィールドのID。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-actions">
+      <button type="button" class="js-cancel-button kintoneplugin-button-dialog-cancel">キャンセル</button>
+      <button class="kintoneplugin-button-dialog-ok">保存</button>
+    </div>
+  </form>
+</section>

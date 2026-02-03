@@ -1,0 +1,32 @@
+.plugin-space-heading {
+  font-size: 1.5rem;
+  margin: 0.8rem;
+}
+.plugin-space-message {
+  display: inline-block;
+  font-size: 1.2em;
+  margin: 0.8rem;
+  margin-top: 0;
+}
+
+/* kuc-buttonのスタイルを設定 */
+.kuc-button-1-17-0__button {
+  font-family: sans-serif;
+  margin-left: 8px;
+}
+
+.ai-button-space {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.ai-button-space--desktop {
+  padding-left: var(--ai-button-offset, 0px);
+}
+
+.ai-button-space .kuc-button-1-17-0__button,
+.ai-button-space.kuc-button-1-17-0__button {
+  margin-left: 0;
+}
+
+
