@@ -35,12 +35,12 @@
     ]
   },
   "name": {
-    "en": "chatgpt-plugin",
-    "ja": "chatgpt-plugin"
+    "en": "Kintone PDF & Image Analysis Plugin (OpenAI)",
+    "ja": "kintone PDF・画像解析プラグイン（OpenAI対応版）"
   },
   "description": {
-    "en": "Plugin to use ChatGPT API in Kintone",
-    "ja": "ChatGPTAPIをkintioneで使うためのプラグイン"
+    "en": "Analyze PDF and image content in Kintone with OpenAI",
+    "ja": "OpenAI を使って kintone の PDF・画像を解析するプラグイン"
   },
   "mobile": {
     "js": [
