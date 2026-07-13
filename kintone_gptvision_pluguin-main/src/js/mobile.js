@@ -9,28 +9,29 @@
   };
 
   const defaultModel = 'gpt-5.6-sol';
-  const defaultReasoning = 'none';
+  const supportedModels = ['gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna', 'gpt-5.5'];
+  const defaultReasoning = 'medium';
   const defaultReasoningByModel = {
     'gpt-5.6-sol': 'medium',
     'gpt-5.6-terra': 'medium',
-    'gpt-5.6-luna': 'medium'
+    'gpt-5.6-luna': 'medium',
+    'gpt-5.5': 'medium'
   };
-  const baseReasoningOptions = ['none', 'low', 'medium', 'high', 'xhigh'];
-  const gpt56ReasoningOptions = [...baseReasoningOptions, 'max'];
+  const gpt55ReasoningOptions = ['none', 'low', 'medium', 'high', 'xhigh'];
+  const gpt56ReasoningOptions = [...gpt55ReasoningOptions, 'max'];
   const reasoningLimitsByModel = {
     'gpt-5.6-sol': gpt56ReasoningOptions,
     'gpt-5.6-terra': gpt56ReasoningOptions,
     'gpt-5.6-luna': gpt56ReasoningOptions,
-    'gpt-5.2-pro': ['medium', 'high', 'xhigh'],
-    'gpt-5.1': ['none', 'low', 'medium', 'high'],
-    'gpt-5.1-chat-latest': ['none', 'low', 'medium', 'high']
+    'gpt-5.5': gpt55ReasoningOptions
   };
-  const safeModel = config.model || defaultModel;
+  const resolveModel = (model) => supportedModels.includes(model) ? model : defaultModel;
+  const safeModel = resolveModel(config.model);
   const getDefaultReasoning = (model) => defaultReasoningByModel[model] || defaultReasoning;
   const normalizeReasoningEffort = (model, effort) => {
     const defaultEffort = getDefaultReasoning(model);
     const normalized = effort === 'minimal' ? 'none' : (effort || defaultEffort);
-    const allowed = reasoningLimitsByModel[model] || baseReasoningOptions;
+    const allowed = reasoningLimitsByModel[model] || gpt55ReasoningOptions;
     if (allowed.includes(normalized)) return normalized;
     if (allowed.includes(defaultEffort)) return defaultEffort;
     return allowed[0];

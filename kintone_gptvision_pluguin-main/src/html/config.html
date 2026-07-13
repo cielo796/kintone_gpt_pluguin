@@ -31,26 +31,22 @@
             <option value="gpt-5.6-sol">gpt-5.6-sol（推奨）</option>
             <option value="gpt-5.6-terra">gpt-5.6-terra</option>
             <option value="gpt-5.6-luna">gpt-5.6-luna</option>
-            <option value="gpt-5.2">gpt-5.2</option>
-            <option value="gpt-5.2-pro">gpt-5.2-pro</option>
-            <option value="gpt-5.1">gpt-5.1</option>
-            <option value="gpt-5.2-chat-latest">gpt-5.2-chat-latest</option>
-            <option value="gpt-5.1-chat-latest">gpt-5.1-chat-latest</option>
+            <option value="gpt-5.5">gpt-5.5</option>
           </select>
-          <div class="hint">GPT-5.6 Sol は複雑な業務向け、Terra は品質・コストのバランス、Luna は高スループット向けです。</div>
+          <div class="hint">GPT-5.6 Sol は複雑な業務向け、Terra は品質・コストのバランス、Luna は高スループット向けです。GPT-5.5 は高度なテキスト生成に利用できます。</div>
         </div>
 
         <label class="settings-label" for="reasoningEffort">Thinking/Reasoning</label>
         <div class="settings-control">
           <select id="reasoningEffort" class="js-reasoning kintoneplugin-input-text">
-            <option value="none">none（デフォルト）</option>
+            <option value="none">none</option>
             <option value="low">low</option>
-            <option value="medium">medium</option>
+            <option value="medium">medium（デフォルト）</option>
             <option value="high">high</option>
             <option value="xhigh">xhigh</option>
             <option value="max">max</option>
           </select>
-          <div class="hint">Responses API では reasoning.effort を指定します。GPT-5.6 は none から max まで対応し、デフォルトは medium です。既存モデルでは、選択できる値を従来どおり制限します。</div>
+          <div class="hint">Responses API では reasoning.effort を指定します。GPT-5.6 は none から max、GPT-5.5 は none から xhigh まで対応し、どちらもデフォルトは medium です。</div>
         </div>
 
         <label class="settings-label" for="role">システムプロンプト</label>

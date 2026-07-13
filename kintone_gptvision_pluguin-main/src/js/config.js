@@ -9,21 +9,21 @@
   const replyFieldEl = document.querySelector('.js-reply-field');
   const spaceIdEl = document.querySelector('.js-space-id');
   const defaultModel = 'gpt-5.6-sol';
-  const defaultReasoning = 'none';
+  const supportedModels = ['gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna', 'gpt-5.5'];
+  const defaultReasoning = 'medium';
   const defaultReasoningByModel = {
     'gpt-5.6-sol': 'medium',
     'gpt-5.6-terra': 'medium',
-    'gpt-5.6-luna': 'medium'
+    'gpt-5.6-luna': 'medium',
+    'gpt-5.5': 'medium'
   };
-  const baseReasoningOptions = ['none', 'low', 'medium', 'high', 'xhigh'];
-  const gpt56ReasoningOptions = [...baseReasoningOptions, 'max'];
+  const gpt55ReasoningOptions = ['none', 'low', 'medium', 'high', 'xhigh'];
+  const gpt56ReasoningOptions = [...gpt55ReasoningOptions, 'max'];
   const reasoningLimitsByModel = {
     'gpt-5.6-sol': gpt56ReasoningOptions,
     'gpt-5.6-terra': gpt56ReasoningOptions,
     'gpt-5.6-luna': gpt56ReasoningOptions,
-    'gpt-5.2-pro': ['medium', 'high', 'xhigh'],
-    'gpt-5.1': ['none', 'low', 'medium', 'high'],
-    'gpt-5.1-chat-latest': ['none', 'low', 'medium', 'high']
+    'gpt-5.5': gpt55ReasoningOptions
   };
 
   if (!formEl || !cancelButtonEl || !apikeyEl || !modelEl || !reasoningEl || !roleEl || !contentFieldEl || !replyFieldEl || !spaceIdEl) {
@@ -36,10 +36,11 @@
    * - fall back to default or first allowed value when invalid
    */
   const getDefaultReasoning = (model) => defaultReasoningByModel[model] || defaultReasoning;
+  const resolveModel = (model) => supportedModels.includes(model) ? model : defaultModel;
   const normalizeReasoningEffort = (model, effort) => {
     const defaultEffort = getDefaultReasoning(model);
     const normalized = effort === 'minimal' ? 'none' : (effort || defaultEffort);
-    const allowed = reasoningLimitsByModel[model] || baseReasoningOptions;
+    const allowed = reasoningLimitsByModel[model] || gpt55ReasoningOptions;
     if (allowed.includes(normalized)) return normalized;
     if (allowed.includes(defaultEffort)) return defaultEffort;
     return allowed[0];
@@ -49,7 +50,7 @@
    * Disable/hide unsupported efforts for the selected model and select a valid one.
    */
   const syncReasoningOptions = (model, desiredEffort) => {
-    const allowed = reasoningLimitsByModel[model] || baseReasoningOptions;
+    const allowed = reasoningLimitsByModel[model] || gpt55ReasoningOptions;
     Array.from(reasoningEl.options).forEach((option) => {
       const isAllowed = allowed.includes(option.value);
       option.disabled = !isAllowed;
@@ -66,7 +67,7 @@
 
   // 既存設定を反映
   const config = kintone.plugin.app.getConfig(PLUGIN_ID) || {};
-  const initialModel = config.model || defaultModel;
+  const initialModel = resolveModel(config.model);
   const initialReasoning = normalizeReasoningEffort(initialModel, config.reasoningEffort);
   apikeyEl.value = config.apikey || '';
   const foundModel = modelEl.querySelector(`option[value="${initialModel}"]`);
@@ -85,7 +86,7 @@
   formEl.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const selectedModel = modelEl.value || defaultModel;
+    const selectedModel = resolveModel(modelEl.value);
     const selectedReasoning = normalizeReasoningEffort(selectedModel, reasoningEl.value || getDefaultReasoning(selectedModel));
 
     const newConfig = {
