@@ -8,10 +8,19 @@
   const contentFieldEl = document.querySelector('.js-content-field');
   const replyFieldEl = document.querySelector('.js-reply-field');
   const spaceIdEl = document.querySelector('.js-space-id');
-  const defaultModel = 'gpt-5.2';
+  const defaultModel = 'gpt-5.6-sol';
   const defaultReasoning = 'none';
+  const defaultReasoningByModel = {
+    'gpt-5.6-sol': 'medium',
+    'gpt-5.6-terra': 'medium',
+    'gpt-5.6-luna': 'medium'
+  };
   const baseReasoningOptions = ['none', 'low', 'medium', 'high', 'xhigh'];
+  const gpt56ReasoningOptions = [...baseReasoningOptions, 'max'];
   const reasoningLimitsByModel = {
+    'gpt-5.6-sol': gpt56ReasoningOptions,
+    'gpt-5.6-terra': gpt56ReasoningOptions,
+    'gpt-5.6-luna': gpt56ReasoningOptions,
     'gpt-5.2-pro': ['medium', 'high', 'xhigh'],
     'gpt-5.1': ['none', 'low', 'medium', 'high'],
     'gpt-5.1-chat-latest': ['none', 'low', 'medium', 'high']
@@ -26,11 +35,13 @@
    * - map legacy "minimal" to "none"
    * - fall back to default or first allowed value when invalid
    */
+  const getDefaultReasoning = (model) => defaultReasoningByModel[model] || defaultReasoning;
   const normalizeReasoningEffort = (model, effort) => {
-    const normalized = effort === 'minimal' ? 'none' : (effort || defaultReasoning);
+    const defaultEffort = getDefaultReasoning(model);
+    const normalized = effort === 'minimal' ? 'none' : (effort || defaultEffort);
     const allowed = reasoningLimitsByModel[model] || baseReasoningOptions;
     if (allowed.includes(normalized)) return normalized;
-    if (allowed.includes(defaultReasoning)) return defaultReasoning;
+    if (allowed.includes(defaultEffort)) return defaultEffort;
     return allowed[0];
   };
 
@@ -67,14 +78,15 @@
   syncReasoningOptions(initialModel, initialReasoning);
 
   modelEl.addEventListener('change', () => {
-    syncReasoningOptions(modelEl.value || defaultModel, reasoningEl.value || defaultReasoning);
+    const model = modelEl.value || defaultModel;
+    syncReasoningOptions(model, reasoningEl.value || getDefaultReasoning(model));
   });
 
   formEl.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const selectedModel = modelEl.value || defaultModel;
-    const selectedReasoning = normalizeReasoningEffort(selectedModel, reasoningEl.value || defaultReasoning);
+    const selectedReasoning = normalizeReasoningEffort(selectedModel, reasoningEl.value || getDefaultReasoning(selectedModel));
 
     const newConfig = {
       apikey: apikeyEl.value.trim(),

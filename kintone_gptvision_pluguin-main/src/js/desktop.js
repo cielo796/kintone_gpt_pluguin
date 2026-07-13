@@ -9,21 +9,32 @@
     'Content-Type': 'application/json'
   };
 
-  // default to latest public model (from OpenAI documented spec)
-  const defaultModel = 'gpt-5.2';
+  // Default to the current flagship model in the GPT-5.6 family.
+  const defaultModel = 'gpt-5.6-sol';
   const defaultReasoning = 'none';
+  const defaultReasoningByModel = {
+    'gpt-5.6-sol': 'medium',
+    'gpt-5.6-terra': 'medium',
+    'gpt-5.6-luna': 'medium'
+  };
   const baseReasoningOptions = ['none', 'low', 'medium', 'high', 'xhigh'];
+  const gpt56ReasoningOptions = [...baseReasoningOptions, 'max'];
   const reasoningLimitsByModel = {
+    'gpt-5.6-sol': gpt56ReasoningOptions,
+    'gpt-5.6-terra': gpt56ReasoningOptions,
+    'gpt-5.6-luna': gpt56ReasoningOptions,
     'gpt-5.2-pro': ['medium', 'high', 'xhigh'],
     'gpt-5.1': ['none', 'low', 'medium', 'high'],
     'gpt-5.1-chat-latest': ['none', 'low', 'medium', 'high']
   };
   const safeModel = config.model || defaultModel;
+  const getDefaultReasoning = (model) => defaultReasoningByModel[model] || defaultReasoning;
   const normalizeReasoningEffort = (model, effort) => {
-    const normalized = effort === 'minimal' ? 'none' : (effort || defaultReasoning);
+    const defaultEffort = getDefaultReasoning(model);
+    const normalized = effort === 'minimal' ? 'none' : (effort || defaultEffort);
     const allowed = reasoningLimitsByModel[model] || baseReasoningOptions;
     if (allowed.includes(normalized)) return normalized;
-    if (allowed.includes(defaultReasoning)) return defaultReasoning;
+    if (allowed.includes(defaultEffort)) return defaultEffort;
     return allowed[0];
   };
   const safeReasoning = normalizeReasoningEffort(safeModel, config.reasoningEffort);
@@ -80,12 +91,9 @@
 
       const requestData = {
         model: safeModel,
-        input: [
-          { role: 'system', content: safeSystem },
-          { role: 'user', content: content }
-        ],
-        reasoning: { effort: safeReasoning },
-        stream: false
+        instructions: safeSystem,
+        input: content,
+        reasoning: { effort: safeReasoning }
       };
 
       notification.text = 'リクエスト中です。しばらくお待ちください。';

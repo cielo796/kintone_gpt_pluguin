@@ -1,17 +1,17 @@
 <section class="settings">
   <header class="settings-hero">
-    <h2 class="settings-heading">OpenAI 最新モデル設定</h2>
-    <p class="kintoneplugin-desc">Responses APIに対応。最新のOpenAIモデル（GPT-5.2系）でレコード内容から回答を生成します。</p>
+    <h2 class="settings-heading">OpenAI モデル設定</h2>
+    <p class="kintoneplugin-desc">Responses API に対応。GPT-5.6 ファミリーでレコード内容から回答を生成します。</p>
     <div class="model-summary">
       <div class="badge badge-recommend">推奨</div>
       <div>
-        <div class="model-name">gpt-5.2</div>
-        <div class="model-note">最新・標準。高品質なテキスト生成に最適。</div>
+        <div class="model-name">gpt-5.6-sol</div>
+        <div class="model-note">GPT-5.6 の最上位モデル。複雑な業務タスク向け。</div>
       </div>
     </div>
     <div class="model-summary muted">
-      <div class="model-name">gpt-5.2-pro</div>
-      <div class="model-note">より高性能な推論が必要なケース向け。</div>
+      <div class="model-name">gpt-5.6-terra / gpt-5.6-luna</div>
+      <div class="model-note">品質・コストのバランス、または高スループット向け。</div>
     </div>
   </header>
 
@@ -28,13 +28,16 @@
         <label class="settings-label" for="model">モデル</label>
         <div class="settings-control">
           <select id="model" class="js-model kintoneplugin-input-text">
-            <option value="gpt-5.2">gpt-5.2（推奨）</option>
+            <option value="gpt-5.6-sol">gpt-5.6-sol（推奨）</option>
+            <option value="gpt-5.6-terra">gpt-5.6-terra</option>
+            <option value="gpt-5.6-luna">gpt-5.6-luna</option>
+            <option value="gpt-5.2">gpt-5.2</option>
             <option value="gpt-5.2-pro">gpt-5.2-pro</option>
             <option value="gpt-5.1">gpt-5.1</option>
             <option value="gpt-5.2-chat-latest">gpt-5.2-chat-latest</option>
             <option value="gpt-5.1-chat-latest">gpt-5.1-chat-latest</option>
           </select>
-          <div class="hint">Responses API対応モデルを選択してください（OpenAI OpenAPI spec v2.3.0より）。</div>
+          <div class="hint">GPT-5.6 Sol は複雑な業務向け、Terra は品質・コストのバランス、Luna は高スループット向けです。</div>
         </div>
 
         <label class="settings-label" for="reasoningEffort">Thinking/Reasoning</label>
@@ -45,8 +48,9 @@
             <option value="medium">medium</option>
             <option value="high">high</option>
             <option value="xhigh">xhigh</option>
+            <option value="max">max</option>
           </select>
-          <div class="hint">Responses APIでは reasoning.effort を指定します。gpt-5.2 / gpt-5.1 のデフォルトは none。gpt-5.2-pro は medium・high・xhigh のみ対応、gpt-5.1 系は xhigh 非対応です。</div>
+          <div class="hint">Responses API では reasoning.effort を指定します。GPT-5.6 は none から max まで対応し、デフォルトは medium です。既存モデルでは、選択できる値を従来どおり制限します。</div>
         </div>
 
         <label class="settings-label" for="role">システムプロンプト</label>
