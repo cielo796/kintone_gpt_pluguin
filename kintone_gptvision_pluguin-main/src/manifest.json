@@ -35,12 +35,12 @@
     ]
   },
   "name": {
-    "en": "Kintone PDF & Image Analysis Plugin (OpenAI)",
-    "ja": "kintone PDF・画像解析プラグイン（OpenAI対応版）"
+    "en": "Kintone Text Generation Plugin (OpenAI)",
+    "ja": "kintone テキスト生成プラグイン（OpenAI対応版）"
   },
   "description": {
-    "en": "Analyze PDF and image content in Kintone with OpenAI",
-    "ja": "OpenAI を使って kintone の PDF・画像を解析するプラグイン"
+    "en": "Generate text in Kintone with OpenAI",
+    "ja": "OpenAI を使って kintone のテキストを生成するプラグイン"
   },
   "mobile": {
     "js": [
