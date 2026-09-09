@@ -1,0 +1,89 @@
+<section class="settings">
+  <header class="settings-hero">
+    <h2 class="settings-heading">OpenAI モデル設定</h2>
+    <p class="kintoneplugin-desc">Responses API に対応。GPT-6 Astra、GPT-5.6 ファミリー、GPT-5.5でレコード内容から回答を生成します。</p>
+    <div class="model-summary">
+      <div class="badge badge-recommend">推奨</div>
+      <div>
+        <div class="model-name">GPT-6 Astra</div>
+        <div class="model-note">複雑な推論や文書作成など、高度な業務タスク向け。</div>
+      </div>
+    </div>
+    <div class="model-summary muted">
+      <div class="model-name">gpt-5.6-terra / gpt-5.6-luna</div>
+      <div class="model-note">品質・コストのバランス、または高スループット向け。</div>
+    </div>
+  </header>
+
+  <form class="js-submit-settings">
+    <div class="settings-card">
+      <h3 class="section-title">OpenAI設定</h3>
+      <div class="settings-grid">
+        <label class="settings-label" for="apikey">APIキー <span class="required">必須</span></label>
+        <div class="settings-control">
+          <input type="password" id="apikey" class="js-apikey kintoneplugin-input-text" placeholder="sk-..." autocomplete="new-password">
+          <div class="hint">組織のセキュリティポリシーに沿って管理してください。</div>
+        </div>
+
+        <label class="settings-label" for="model">モデル</label>
+        <div class="settings-control">
+          <select id="model" class="js-model kintoneplugin-input-text">
+            <option value="gpt-6-astra">GPT-6 Astra（推奨）</option>
+            <option value="gpt-5.6-sol">gpt-5.6-sol</option>
+            <option value="gpt-5.6-terra">gpt-5.6-terra</option>
+            <option value="gpt-5.6-luna">gpt-5.6-luna</option>
+            <option value="gpt-5.5">gpt-5.5</option>
+          </select>
+          <div class="hint">GPT-6 Astra を推奨します。GPT-5.6 Sol、Terra、Luna、GPT-5.5 も選択できます。保存済みのモデル設定は引き継ぎます。</div>
+        </div>
+
+        <label class="settings-label" for="reasoningEffort">Thinking/Reasoning</label>
+        <div class="settings-control">
+          <select id="reasoningEffort" class="js-reasoning kintoneplugin-input-text">
+            <option value="none">none</option>
+            <option value="low">low</option>
+            <option value="medium">medium（デフォルト）</option>
+            <option value="high">high</option>
+            <option value="xhigh">xhigh</option>
+            <option value="max">max</option>
+          </select>
+          <div class="hint">GPT-6 Astra は low から max、GPT-5.6 は none から max、GPT-5.5 は none から xhigh に対応。本プラグインの初期値は medium です。Astra に切り替える際、none は low に変更します。</div>
+        </div>
+
+        <label class="settings-label" for="role">システムプロンプト</label>
+        <div class="settings-control">
+          <textarea id="role" class="js-role kintoneplugin-input-text" rows="4" placeholder="例：あなたはカスタマーサポート担当です。ユーザーの質問に簡潔に答えてください。"></textarea>
+          <div class="hint">AIの役割やトーンを指定します。未入力時は汎用アシスタントとして動作します。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <h3 class="section-title">kintoneフィールド設定</h3>
+      <div class="settings-grid">
+        <label class="settings-label" for="contentField">入力フィールドコード <span class="required">必須</span></label>
+        <div class="settings-control">
+          <input type="text" id="contentField" class="js-content-field kintoneplugin-input-text" placeholder="例：Inquiry">
+          <div class="hint">AIに渡す本文のフィールドコード。テーブル外の文字列（1行・複数行）を指定してください。</div>
+        </div>
+
+        <label class="settings-label" for="replyField">出力フィールドコード <span class="required">必須</span></label>
+        <div class="settings-control">
+          <input type="text" id="replyField" class="js-reply-field kintoneplugin-input-text" placeholder="例：Answer">
+          <div class="hint">文字列（複数行）を推奨します。文字列（1行）は改行のない回答のみ対応。自動計算・ルックアップ・コピー先・テーブル内は指定できません。</div>
+        </div>
+
+        <label class="settings-label" for="spaceId">スペースID <span class="required">必須</span></label>
+        <div class="settings-control">
+          <input type="text" id="spaceId" class="js-space-id kintoneplugin-input-text" placeholder="例：ai-button">
+          <div class="hint">ボタンを配置するスペースフィールドのID。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-actions">
+      <button type="button" class="js-cancel-button kintoneplugin-button-dialog-cancel">キャンセル</button>
+      <button class="kintoneplugin-button-dialog-ok">保存</button>
+    </div>
+  </form>
+</section>

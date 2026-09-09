@@ -1,0 +1,21 @@
+# Local dependencies and development tests
+/node_modules/
+/test/
+/tests/
+
+# Windows-generated files and caches
+/Microsoft/
+/[Ww]indows/
+Thumbs.db
+Desktop.ini
+
+# Local tools, backups and signing keys
+/.agents/
+/.codex/
+/.local-backup/
+*.ppk
+
+# Keep only the current distributable
+*.zip
+!/dist/plugin.zip
+node_modules
