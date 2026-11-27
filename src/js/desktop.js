@@ -1,10 +1,11 @@
-(function(PLUGIN_ID) {
+(function (PLUGIN_ID) {
+  // eslint-disable-next-line strict -- kintone loads this file as a classic script.
   'use strict';
   window.kintoneGptPlugins[PLUGIN_ID].start({
     recordApi: kintone.app.record,
     getAppId: () => kintone.app.getId(),
     prefix: 'app',
-    Button: Kuc.Button,
-    Notification: Kuc.Notification
+    isMobile: false,
+    getHeaderSpace: () => kintone.app.record.getHeaderMenuSpaceElement(),
   });
 })(kintone.$PLUGIN_ID);

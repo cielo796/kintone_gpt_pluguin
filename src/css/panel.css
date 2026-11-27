@@ -1,0 +1,15 @@
+.kgp-panel { box-sizing:border-box; width:0; min-width:100%; max-width:100%; padding:0 8px; margin:4px 0 12px;
+  color:#333; font-family:inherit; font-size:14px; line-height:1.6; overflow-wrap:anywhere; }
+/* kintone 標準ボタンの見た目 */
+.kgp-ask { min-width:163px; height:48px; min-height:48px; padding:0 24px; margin:0; border:1px solid #e3e7e8;
+  border-radius:0; background:#f7f9fa; box-shadow:1px 1px 1px #fff inset; color:#3498db; font:inherit; font-size:16px; cursor:pointer; }
+.kgp-ask:hover { background:#f7f9fa; box-shadow:0 0 2px rgba(0,0,0,.1); }
+.kgp-ask:focus-visible { outline:3px solid #3498db; outline-offset:2px; }
+.kgp-ask:disabled { opacity:.55; cursor:wait; }
+.kgp-message, .kgp-metrics { margin:8px 0 0; }
+.kgp-message-info { color:#526174; }
+.kgp-message-success { color:#17613b; }
+.kgp-message-error { color:#aa2222; }
+.kgp-metrics { color:#526174; font-size:12px; font-variant-numeric:tabular-nums; }
+.kgp-mobile .kgp-ask { width:100%; }
+@media (max-width:600px) { .kgp-ask { width:100%; } }

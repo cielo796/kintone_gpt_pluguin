@@ -1,30 +1,24 @@
 {
   "manifest_version": 1,
-  "version": 6,
+  "version": 9,
   "type": "APP",
   "desktop": {
     "js": [
-      "https://unpkg.com/kintone-ui-component/umd/kuc.min.js",
       "js/common.js",
       "js/desktop.js"
     ],
     "css": [
-      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
-      "css/51-modern-default.css",
-      "css/desktop.css"
+      "css/panel.css"
     ]
   },
   "icon": "image/icon.png",
   "config": {
     "html": "html/config.html",
     "js": [
-      "https://unpkg.com/kintone-ui-component/umd/kuc.min.js",
       "js/common.js",
       "js/config.js"
     ],
     "css": [
-      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
-      "css/51-modern-default.css",
       "css/config.css"
     ],
     "required_params": [
@@ -45,13 +39,11 @@
   },
   "mobile": {
     "js": [
-      "https://unpkg.com/kintone-ui-component/umd/kuc.min.js",
       "js/common.js",
       "js/mobile.js"
     ],
     "css": [
-      "https://unpkg.com/kintone-ui-component/umd/kuc.min.css", 
-      "css/mobile.css"
+      "css/panel.css"
     ]
   }
 }

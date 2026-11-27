@@ -19,3 +19,6 @@ Desktop.ini
 *.zip
 !/dist/plugin.zip
 node_modules
+
+# Local agent logs
+/logs/
