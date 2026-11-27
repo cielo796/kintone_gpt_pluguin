@@ -1,82 +1,89 @@
 (function(PLUGIN_ID) {
+  'use strict';
+
   const formEl = document.querySelector('.js-submit-settings');
   const cancelButtonEl = document.querySelector('.js-cancel-button');
   const apikeyEl = document.querySelector('.js-apikey');
+  const apikeyStateEl = document.querySelector('.js-apikey-state');
   const modelEl = document.querySelector('.js-model');
   const reasoningEl = document.querySelector('.js-reasoning');
   const roleEl = document.querySelector('.js-role');
   const contentFieldEl = document.querySelector('.js-content-field');
   const replyFieldEl = document.querySelector('.js-reply-field');
   const spaceIdEl = document.querySelector('.js-space-id');
-  const saveButtonEl = document.querySelector('.kintoneplugin-button-dialog-ok');
+  const formStateEl = document.querySelector('.js-form-state');
+  const saveButtonEl = document.querySelector('.js-save-button');
+
   const proxyUrl = 'https://api.openai.com/v1/responses';
   const proxyMethod = 'POST';
+  const textTypes = ['SINGLE_LINE_TEXT', 'MULTI_LINE_TEXT'];
+  const defaultModel = 'gpt-6-luna';
+  const defaultReasoning = 'medium';
+  const models = [
+    { value: 'gpt-6.1-sol', label: 'GPT-6.1 Sol', efforts: ['low', 'medium', 'high', 'xhigh', 'max'] },
+    { value: 'gpt-6.2-sol', label: 'GPT-6.2 Sol', efforts: ['low', 'medium', 'high', 'xhigh', 'max'] },
+    { value: 'gpt-6.2-astra', label: 'GPT-6.2 Astra', efforts: ['low', 'medium', 'high', 'xhigh', 'max'] },
+    { value: 'gpt-6.1-terra', label: 'GPT-6.1 Terra', efforts: ['none', 'low', 'medium', 'high', 'xhigh', 'max'] },
+    { value: 'gpt-6-astra', label: 'GPT-6 Astra', efforts: ['low', 'medium', 'high', 'xhigh', 'max'] },
+    { value: 'gpt-6-sol', label: 'GPT-6 Sol', efforts: ['none', 'low', 'medium', 'high', 'xhigh', 'max'] },
+    { value: 'gpt-6-luna', label: 'GPT-6 Luna（推奨）', efforts: ['none', 'low', 'medium', 'high', 'xhigh', 'max'] }
+  ];
+  const modelValues = models.map((model) => model.value);
+  const effortsByModel = {};
+  models.forEach((model) => { effortsByModel[model.value] = model.efforts; });
+
   let saving = false;
   let proxyConfigLoaded = false;
-  const defaultModel = 'gpt-6-astra';
-  const supportedModels = ['gpt-6-astra', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna', 'gpt-5.5'];
-  const defaultReasoning = 'medium';
-  const defaultReasoningByModel = {
-    'gpt-6-astra': 'medium',
-    'gpt-5.6-sol': 'medium',
-    'gpt-5.6-terra': 'medium',
-    'gpt-5.6-luna': 'medium',
-    'gpt-5.5': 'medium'
-  };
-  const gpt55ReasoningOptions = ['none', 'low', 'medium', 'high', 'xhigh'];
-  const gpt56ReasoningOptions = [...gpt55ReasoningOptions, 'max'];
-  const reasoningLimitsByModel = {
-    'gpt-6-astra': ['low', 'medium', 'high', 'xhigh', 'max'],
-    'gpt-5.6-sol': gpt56ReasoningOptions,
-    'gpt-5.6-terra': gpt56ReasoningOptions,
-    'gpt-5.6-luna': gpt56ReasoningOptions,
-    'gpt-5.5': gpt55ReasoningOptions
-  };
+  let formLoaded = false;
 
-  if (!formEl || !cancelButtonEl || !apikeyEl || !modelEl || !reasoningEl || !roleEl || !contentFieldEl || !replyFieldEl || !spaceIdEl) {
+  if (!formEl || !cancelButtonEl || !apikeyEl || !apikeyStateEl || !modelEl || !reasoningEl ||
+      !roleEl || !contentFieldEl || !replyFieldEl || !spaceIdEl || !formStateEl || !saveButtonEl) {
     throw new Error('必須の要素が見つかりません。HTMLのクラス指定を確認してください。');
   }
 
-  /**
-   * Normalize reasoning effort for saved config and restrict to model capability.
-   * - map legacy "minimal" to "none"
-   * - fall back to default or first allowed value when invalid
-   */
-  const getDefaultReasoning = (model) => defaultReasoningByModel[model] || defaultReasoning;
-  const resolveModel = (model) => supportedModels.includes(model) ? model : defaultModel;
-  const normalizeReasoningEffort = (model, effort) => {
-    const defaultEffort = getDefaultReasoning(model);
-    if (model === 'gpt-6-astra' && (effort === 'none' || effort === 'minimal')) return 'low';
-    const normalized = effort === 'minimal' ? 'none' : (effort || defaultEffort);
-    const allowed = reasoningLimitsByModel[model] || gpt55ReasoningOptions;
-    if (allowed.includes(normalized)) return normalized;
-    if (allowed.includes(defaultEffort)) return defaultEffort;
-    return allowed[0];
-  };
+  const resolveModel = (model) => modelValues.includes(model) ? model : defaultModel;
 
   /**
-   * Disable/hide unsupported efforts for the selected model and select a valid one.
+   * Normalize reasoning effort the same way on the settings screen and record screens.
+   * - map legacy "minimal" to "none"
+   * - models that reject "none" use "low" instead
+   * - empty or unsupported values fall back to "medium"
+   */
+  const normalizeReasoningEffort = (model, effort) => {
+    const allowed = effortsByModel[model] || effortsByModel[defaultModel];
+    let normalized = effort === 'minimal' ? 'none' : (effort || '');
+    if (!allowed.includes('none') && normalized === 'none') normalized = 'low';
+    return allowed.includes(normalized) ? normalized : defaultReasoning;
+  };
+
+  const findOption = (selectEl, value) =>
+    Array.from(selectEl.options || []).find((option) => option.value === value);
+
+  /**
+   * Disable and hide unsupported efforts for the selected model, then select a valid one.
    */
   const syncReasoningOptions = (model, desiredEffort) => {
-    const allowed = reasoningLimitsByModel[model] || gpt55ReasoningOptions;
-    Array.from(reasoningEl.options).forEach((option) => {
+    const allowed = effortsByModel[model] || effortsByModel[defaultModel];
+    Array.from(reasoningEl.options || []).forEach((option) => {
       const isAllowed = allowed.includes(option.value);
       option.disabled = !isAllowed;
       option.hidden = !isAllowed;
     });
     const resolved = normalizeReasoningEffort(model, desiredEffort);
-    const target = reasoningEl.querySelector(`option[value="${resolved}"]`);
+    const target = findOption(reasoningEl, resolved) || reasoningEl.options[0];
     if (target) {
       target.selected = true;
-    } else if (reasoningEl.options.length) {
-      reasoningEl.selectedIndex = 0;
+      reasoningEl.value = target.value;
     }
   };
 
-  // 既存設定を反映
+  const updateApiKeyState = () => {
+    apikeyStateEl.textContent = apikeyEl.value.trim() ? '設定済み' : '未設定';
+  };
+
+  // 既存設定を反映する。
   const config = kintone.plugin.app.getConfig(PLUGIN_ID) || {};
   const initialModel = resolveModel(config.model);
-  const initialReasoning = normalizeReasoningEffort(initialModel, config.reasoningEffort);
   try {
     // 専用設定を優先し、旧版の通常設定にしかないキーも移行できるようにする。
     const proxyConfig = kintone.plugin.app.getProxyConfig(proxyUrl, proxyMethod);
@@ -88,18 +95,144 @@
     // 読み込み失敗時に既存の認証設定を上書きしない。エラーにキーが含まれる可能性もある。
     alert('APIキー設定を読み込めませんでした。画面を再読み込みしてください。');
   }
-  const foundModel = modelEl.querySelector(`option[value="${initialModel}"]`);
-  if (foundModel) foundModel.selected = true;
+  updateApiKeyState();
+  apikeyEl.addEventListener('input', updateApiKeyState);
+
+  const initialModelOption = findOption(modelEl, initialModel);
+  if (initialModelOption) initialModelOption.selected = true;
+  modelEl.value = initialModel;
   roleEl.value = config.role || '';
-  contentFieldEl.value = config.contentField || '';
-  replyFieldEl.value = config.replyField || '';
-  spaceIdEl.value = config.spaceId || '';
-  syncReasoningOptions(initialModel, initialReasoning);
+  // 保存済みのシステムプロンプトがあれば、詳細設定を開いて見落としを防ぐ。
+  const detailsEl = document.querySelector('.kgp-config-details');
+  if (detailsEl && config.role) detailsEl.open = true;
+  syncReasoningOptions(initialModel, config.reasoningEffort);
 
   modelEl.addEventListener('change', () => {
-    const model = modelEl.value || defaultModel;
-    syncReasoningOptions(model, reasoningEl.value || getDefaultReasoning(model));
+    const model = resolveModel(modelEl.value);
+    syncReasoningOptions(model, reasoningEl.value);
   });
+
+  const withTimeout = async (task, milliseconds, message) => {
+    let timer;
+    try {
+      return await Promise.race([task, new Promise((resolve, reject) => {
+        timer = setTimeout(() => reject(new Error(message)), milliseconds);
+      })]);
+    } finally { clearTimeout(timer); }
+  };
+
+  const setFormState = (text, isError) => {
+    formStateEl.textContent = text;
+    formStateEl.classList.toggle('kgp-config-hint-error', Boolean(isError));
+  };
+
+  const createOption = (value, text) => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = text;
+    return option;
+  };
+
+  const setSelectOptions = (selectEl, items, savedValue) => {
+    const options = items.map((item) => createOption(item.value, item.label));
+    const value = savedValue || '';
+    // 保存済みの値を黙って消さず、見つからないことが分かる選択肢として残す。
+    if (value && !items.some((item) => item.value === value)) {
+      options.push(createOption(value, value + '（見つかりません）'));
+    }
+    selectEl.replaceChildren(...options);
+    selectEl.value = value;
+  };
+
+  const fieldLabel = (code, field) => {
+    const label = typeof field?.label === 'string' && field.label ? field.label : code;
+    return label + '（' + code + '）';
+  };
+
+  const textFieldCodes = (properties) =>
+    Object.keys(properties).filter((code) => textTypes.includes(properties[code]?.type));
+
+  const collectLookupCopyTargets = (properties) => {
+    const targets = new Set();
+    const visit = (fields) => {
+      Object.keys(fields || {}).forEach((code) => {
+        const field = fields[code];
+        if (Array.isArray(field?.lookup?.fieldMappings)) {
+          field.lookup.fieldMappings.forEach((mapping) => {
+            if (mapping?.field) targets.add(mapping.field);
+          });
+        }
+        if (field?.fields) visit(field.fields);
+      });
+    };
+    visit(properties);
+    return targets;
+  };
+
+  const replyFieldCodes = (properties) => {
+    const copied = collectLookupCopyTargets(properties);
+    return textFieldCodes(properties).filter((code) => {
+      const field = properties[code] || {};
+      return !field.expression &&
+        !Object.prototype.hasOwnProperty.call(field, 'lookup') && !copied.has(code);
+    });
+  };
+
+  const collectSpaceIds = (layout) => {
+    const ids = [];
+    const visit = (rows) => {
+      if (!Array.isArray(rows)) return;
+      rows.forEach((row) => {
+        if (row?.type === 'GROUP') {
+          visit(row.layout);
+        } else if (row?.type === 'ROW' && Array.isArray(row.fields)) {
+          row.fields.forEach((field) => {
+            if (field?.type === 'SPACER' && field.elementId && !ids.includes(field.elementId)) {
+              ids.push(field.elementId);
+            }
+          });
+        }
+      });
+    };
+    visit(layout);
+    return ids;
+  };
+
+  const populateSelects = (properties, layout) => {
+    const placeholder = { value: '', label: '選択してください' };
+    const toOptions = (codes) => [placeholder].concat(codes.map((code) =>
+      ({ value: code, label: fieldLabel(code, properties[code]) })));
+
+    setSelectOptions(contentFieldEl, toOptions(textFieldCodes(properties)), config.contentField);
+    setSelectOptions(replyFieldEl, toOptions(replyFieldCodes(properties)), config.replyField);
+    setSelectOptions(spaceIdEl, [placeholder].concat(collectSpaceIds(layout).map((id) =>
+      ({ value: id, label: id }))), config.spaceId);
+  };
+
+  const loadFormInfo = async () => {
+    const appId = kintone.app.getId();
+    const get = (name) =>
+      kintone.api(kintone.api.url('/k/v1/preview/app/form/' + name + '.json', true), 'GET', { app: appId });
+    try {
+      const [fields, layout] = await withTimeout(
+        Promise.all([get('fields'), get('layout')]),
+        15000, 'フォーム情報の取得がタイムアウトしました。');
+      if (!fields || typeof fields.properties !== 'object' || !layout || !Array.isArray(layout.layout)) {
+        throw new Error('invalid form');
+      }
+      populateSelects(fields.properties, layout.layout);
+      formLoaded = true;
+      saveButtonEl.disabled = false;
+      setFormState('', false);
+    } catch (error) {
+      formLoaded = false;
+      saveButtonEl.disabled = true;
+      setFormState('フォーム情報を取得できませんでした。画面を再読み込みしてください。', true);
+    }
+  };
+
+  saveButtonEl.disabled = true;
+  loadFormInfo();
 
   formEl.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -108,10 +241,14 @@
       alert('APIキー設定を読み込めていません。画面を再読み込みしてください。');
       return;
     }
+    if (!formLoaded) {
+      alert('フォーム情報を取得できていません。画面を再読み込みしてください。');
+      return;
+    }
 
     const apikey = apikeyEl.value.trim();
     const selectedModel = resolveModel(modelEl.value);
-    const selectedReasoning = normalizeReasoningEffort(selectedModel, reasoningEl.value || getDefaultReasoning(selectedModel));
+    const selectedReasoning = normalizeReasoningEffort(selectedModel, reasoningEl.value);
 
     const newConfig = {
       apiKeyConfigured: 'true',
@@ -123,31 +260,30 @@
       spaceId: spaceIdEl.value.trim()
     };
 
-    const requiredFields = [
-      { value: apikey, label: 'APIキー' },
-      { value: newConfig.contentField, label: '入力フィールドコード' },
-      { value: newConfig.replyField, label: '出力フィールドコード' },
-      { value: newConfig.spaceId, label: 'スペースID' }
+    const required = [
+      { value: apikey, message: 'APIキーを入力してください。' },
+      { value: newConfig.contentField, message: '入力フィールドを選択してください。' },
+      { value: newConfig.replyField, message: '返信フィールドを選択してください。' },
+      { value: newConfig.spaceId, message: 'ボタンを置くスペースを選択してください。' }
     ];
-
-    const missing = requiredFields.find((field) => !field.value);
+    const missing = required.find((field) => !field.value);
     if (missing) {
-      alert(`${missing.label}を入力してください。`);
+      alert(missing.message);
       return;
     }
 
     saving = true;
-    if (saveButtonEl) saveButtonEl.disabled = true;
+    saveButtonEl.disabled = true;
     const onSaveError = () => {
       saving = false;
-      if (saveButtonEl) saveButtonEl.disabled = false;
+      saveButtonEl.disabled = false;
       alert('設定の保存に失敗しました。もう一度お試しください。');
     };
     try {
       await window.kintoneGptPlugins[PLUGIN_ID].validateSettings(newConfig, kintone.app.getId());
     } catch (error) {
       saving = false;
-      if (saveButtonEl) saveButtonEl.disabled = false;
+      saveButtonEl.disabled = false;
       alert(window.kintoneGptPlugins[PLUGIN_ID].errorMessage(error));
       return;
     }

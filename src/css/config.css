@@ -1,114 +1,27 @@
-.settings {
-  max-width: 960px;
-  margin: 0 auto;
-}
-
-.settings-hero {
-  padding: 16px 12px 8px;
-}
-
-.settings-heading {
-  padding: 8px 0;
-  margin: 0;
-}
-
-.model-summary {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 10px 12px;
-  border: 1px solid #e3e7eb;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  margin-bottom: 10px;
-}
-
-.model-summary.muted {
-  opacity: 0.85;
-}
-
-.badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-  color: #fff;
-  background: #4a6fdc;
-  font-weight: 600;
-}
-
-.badge-recommend {
-  background: #00a15d;
-}
-
-.model-name {
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.model-note {
-  color: #666;
-  font-size: 13px;
-}
-
-.settings-card {
-  background: #fff;
-  border: 1px solid #e3e7eb;
-  border-radius: 10px;
-  padding: 16px 18px;
-  margin-top: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-}
-
-.section-title {
-  margin: 0 0 10px;
-  font-size: 15px;
-}
-
-.settings-grid {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 12px 16px;
-}
-
-.settings-label {
-  align-self: center;
-  font-weight: 600;
-}
-
-.settings-control input,
-.settings-control textarea,
-.settings-control select {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.hint {
-  color: #666;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-.required {
-  color: #d23f31;
-  font-size: 11px;
-  margin-left: 4px;
-}
-
-.settings-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  padding: 16px 0;
-}
-
-@media (max-width: 768px) {
-  .settings-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .settings-label {
-    padding-top: 4px;
-  }
-}
+.kgp-config { max-width:960px; margin:0 auto; }
+.kgp-config-hero { padding:16px 12px 8px; }
+.kgp-config-heading { margin:0 0 8px; padding:8px 0; font-size:18px; }
+.kgp-config-card { margin-top:12px; padding:16px 18px; border:1px solid #e3e7eb; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+.kgp-config-title { margin:0 0 10px; font-size:15px; }
+.kgp-config-grid { display:grid; grid-template-columns:200px 1fr; gap:12px 16px; align-items:start; }
+.kgp-config-label { align-self:center; font-weight:600; }
+.kgp-config-control input, .kgp-config-control textarea, .kgp-config-control select {
+  width:100%; box-sizing:border-box; min-height:36px; padding:6px 10px; border:1px solid #c7ccce; border-radius:4px;
+  background:#fff; color:#333; font:inherit; font-size:14px; }
+.kgp-config-control textarea { line-height:1.6; resize:vertical; }
+.kgp-config-control input:focus, .kgp-config-control textarea:focus, .kgp-config-control select:focus { outline:2px solid #2a72ad; outline-offset:1px; }
+.kgp-config-hint { margin-top:4px; color:#666; font-size:12px; }
+.kgp-config-hint-error { color:#aa2222; }
+.kgp-config-details { margin-top:12px; }
+.kgp-config-summary { padding:14px 18px; border:1px solid #e3e7eb; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.06); font-size:15px; font-weight:600; cursor:pointer; }
+.kgp-config-summary:focus { outline:2px solid #2a72ad; outline-offset:1px; }
+.kgp-config-details[open] .kgp-config-summary { border-bottom-right-radius:0; border-bottom-left-radius:0; }
+.kgp-config-details-body { margin-top:0; border-top:0; border-top-right-radius:0; border-top-left-radius:0; }
+.kgp-config-section + .kgp-config-section { margin-top:20px; padding-top:16px; border-top:1px solid #eef1f3; }
+.kgp-config-section-title { margin:0 0 8px; font-size:14px; }
+.kgp-config-required { margin-left:4px; color:#d23f31; font-size:11px; }
+.kgp-config-actions { display:flex; justify-content:flex-end; gap:8px; padding:16px 0; }
+.kgp-config-actions button { min-width:120px; min-height:44px; padding:0 20px; border:1px solid #c7ccce; border-radius:4px; background:#fff; color:#333; font:inherit; font-size:14px; cursor:pointer; }
+.kgp-config-actions .js-save-button { border-color:#2a72ad; background:#2a72ad; color:#fff; font-weight:700; }
+.kgp-config-actions button:disabled { opacity:.55; cursor:wait; }
+@media (max-width:768px) { .kgp-config-grid { grid-template-columns:1fr; } .kgp-config-label { padding-top:4px; } }
